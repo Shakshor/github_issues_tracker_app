@@ -8,11 +8,12 @@ class IssuesListScreen extends StatefulWidget {
 }
 
 class _IssuesListScreenState extends State<IssuesListScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Github Issues List'),
+        title: const Text('Github Issues List'),
         backgroundColor: Color(0xff333333),
         elevation: 0,
       ),
