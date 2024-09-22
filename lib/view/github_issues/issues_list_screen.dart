@@ -17,6 +17,8 @@ class _IssuesListScreenState extends State<IssuesListScreen> {
   // states
   List<IssueItemModel> filteredIssues = [];
   List<IssueItemModel>? issuesData;
+  List<IssueItemModel>? issuesWithoutFlutter;
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,22 +28,62 @@ class _IssuesListScreenState extends State<IssuesListScreen> {
     return Scaffold(
       backgroundColor: const Color(0xff333333),
 
+      // body: SafeArea(
+      //   child: Center(
+      //     child: ElevatedButton(
+      //       onPressed: (){
+      //         _issuesListRepo.fetchGithubIssues();
+      //       },
+      //       child: Text('Fetch Data'),
+      //     ),
+      //   ),
+      // ),
+
       body: SafeArea(
         child: Column(
           children:[
             _buildPageTitle(size, textFont),
+            // text_field
+            Padding(
+            padding:  EdgeInsets.symmetric(
+              vertical: size.height * 0.008,
+              // vertical: ,
+            ),
+            child: TextField(
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: textFont.scale(17),
+              ),
+              decoration:  InputDecoration(
+                labelText: 'Search Issue Title',
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: textFont.scale(17),
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: size.width * 0.002,
+                      color: Colors.white,
+                    )
+                ),
+              ),
+              onChanged: (query) {
+                if(issuesWithoutFlutter != null){
+                  // log('inside_text_field: $issuesWithoutFlutter');
+                  setState(() {
+                    log('inside_text_field: $issuesWithoutFlutter');
+                    filteredIssues = issuesWithoutFlutter!.where((issue) => issue.title!.toLowerCase().contains(query.toLowerCase())).toList();
+                    });
+                  }
+                // else{
+                //     return;
+                //   }
+                }
+            ),
+          ),
 
-            _buildFilterTextField(size, textFont),
-
-            _buildIssueExpanded(size, textFont),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIssueExpanded(Size size, TextScaler textFont) {
-    return Expanded(
+          // showing_list_data
+          Expanded(
             child: FutureBuilder<List<IssueItemModel>>(
                 future: _issuesListRepo.fetchGithubIssues(),
                 builder: (context, AsyncSnapshot<List<IssueItemModel>> snapshot){
@@ -54,33 +96,40 @@ class _IssuesListScreenState extends State<IssuesListScreen> {
                   // error_showing
                   else if(snapshot.hasError){
                     return Center(
-                      child: Text(snapshot.error.toString()),
+                      child: Text(
+                          snapshot.error.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: textFont.scale(17),
+                        ),
+                      ),
                     );
                   }
                   else{
                     if(snapshot.data!.isEmpty){
-                      return const Center(
-                        child: Text('Empty Github Issues'),
+                      return Center(
+                        child: Text(
+                            'Empty Github Issues',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: textFont.scale(17),
+                          ),
+                        ),
                       );
                     }
                     else{
-                      log('.....inside_github_issues_list_screen.....${snapshot.data!.length}...........');
+                      log('.....inside_total_github_issues_list_screen.....${snapshot.data!.length}...........');
                       issuesData = snapshot.data!;
-                      // List<IssueItemModel> issuesData = snapshot.data!.where((issueItem) => issueItem.title!.contains('flutter')).toList();
+                      issuesWithoutFlutter = issuesData!.where((issueItem) => !(issueItem.title!.toLowerCase().contains('flutter'))).toList();
 
-                      return _buildIssuesListView(size, textFont);
-                    }
-                  }
-                }
-            ),
-          );
-  }
+                      log('.....issue_without_flutter.....${issuesWithoutFlutter?.length}...........');
 
-  Widget _buildIssuesListView(Size size, TextScaler textFont) {
-    return ListView.builder(
-                          itemCount: filteredIssues.isNotEmpty ? filteredIssues.length : issuesData!.length,
+                      return ListView.builder(
+                          // itemCount: filteredIssues.isNotEmpty ? filteredIssues.length : issuesData?.length,
+                          itemCount: filteredIssues.isNotEmpty ? filteredIssues.length : issuesWithoutFlutter!.length,
                           itemBuilder: (context, index){
-                            var issueItemData = issuesData![index];
+                            // var issueItemData = issuesData![index];
+                            var issueItemData = issuesWithoutFlutter![index];
                             return GestureDetector(
                               onTap: (){
                                 Navigator.push(
@@ -90,108 +139,87 @@ class _IssuesListScreenState extends State<IssuesListScreen> {
                                     ));
                               },
                               child: Card(
-                                  margin: EdgeInsets.zero,
-                                  surfaceTintColor: const Color(0xff333333),
-                                  elevation: 0,
-                                  color: const Color(0xff333333),
-                                  child:Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: size.height * 0.012,
-                                      horizontal: size.width * 0.028,
-                                    ),
-                                    child: Column(
-                                      children:[
-                                        // issue_title&time
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children:[
-                                            Expanded(
-                                              child: Text(
-                                                issueItemData.title.toString(),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: textFont.scale(17),
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              issueItemData.createdAt.toString(),
+                                margin: EdgeInsets.zero,
+                                surfaceTintColor: const Color(0xff333333),
+                                elevation: 0,
+                                color: const Color(0xff333333),
+                                child:Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: size.height * 0.012,
+                                    horizontal: size.width * 0.028,
+                                  ),
+                                  child: Column(
+                                    children:[
+                                      // issue_title&time
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children:[
+                                          Expanded(
+                                            child: Text(
+                                              issueItemData.title.toString(),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                               style: TextStyle(
-                                                fontSize: textFont.scale(12),
-                                                color: const Color(0xffB8B8B8),
+                                                color: Colors.white,
+                                                fontSize: textFont.scale(17),
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        // image&name_id
-                                        Row(
+                                          ),
+                                          Text(
+                                            issueItemData.createdAt.toString(),
+                                            style: TextStyle(
+                                              fontSize: textFont.scale(12),
+                                              color: const Color(0xffB8B8B8),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // image&name_id
+                                      Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children:[
-                                            CircleAvatar(
-                                              // radius: 24,
-                                              radius: size.width * 0.06,
-                                              backgroundImage: NetworkImage(issueItemData.user!.avatarUrl!.toString()),
-                                            ),
+                                          CircleAvatar(
+                                            // radius: 24,
+                                            radius: size.width * 0.06,
+                                            backgroundImage: NetworkImage(issueItemData.user!.avatarUrl!.toString()),
+                                          ),
 
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                left: size.width * 0.02,
-                                              ),
-                                              child: Text(
-                                                issueItemData.nodeId.toString(),
-                                                style: TextStyle(
-                                                  fontSize: textFont.scale(12),
-                                                  color: const Color(0xff9B9B9B),
-                                                ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: size.width * 0.02,
+                                            ),
+                                            child: Text(
+                                              issueItemData.nodeId.toString(),
+                                              style: TextStyle(
+                                                fontSize: textFont.scale(12),
+                                                color: const Color(0xff9B9B9B),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
+                                      ),
 
-                                        const Divider(
-                                          thickness: 1,
-                                          color: Colors.grey,
-                                        ),
-                                      ],
-                                    ),
+                                      const Divider(
+                                        thickness: 1,
+                                        color: Colors.grey,
+                                      ),
+                                    ],
                                   ),
+                                ),
                               ),
                             );
                           }
                       );
-  }
-
-  Widget _buildFilterTextField(Size size, TextScaler textFont) {
-    return Padding(
-            padding:  EdgeInsets.symmetric(
-                vertical: size.height * 0.008,
-                // vertical: ,
+                    }
+                  }
+                }
             ),
-            child: TextField(
-              decoration:  InputDecoration(
-                labelText: 'Search Issue Title',
-                labelStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: textFont.scale(17),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: size.width * 0.002,
-                      color: Colors.white,
-                  )
-                ),
-              ),
-              onChanged: (query) {
-                setState(() {
-                  filteredIssues = issuesData!.where((issue) => issue.title!.toLowerCase().contains(query.toLowerCase()))
-                      .toList();
-                });
-              },
-            ),
-          );
+          ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildPageTitle(Size size, TextScaler textFont) {
