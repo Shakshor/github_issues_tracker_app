@@ -12,29 +12,6 @@ class IssuesListRepo {
   Future<List<IssueItemModel>> fetchGithubIssues () async {
     // dependency_object
     final BaseApiService apiService = NetWorkApiService();
-    //
-    // dynamic url = AppUrl.baseUrl;
-    // final response = await http.get(Uri.parse(url));
-    // log('issues_list_repo_res_status: ${response.statusCode}');
-    // try{
-    //   if(response.statusCode == 200){
-    //     var data = jsonDecode(response.body.toString());
-    //     log('issues_list_repo_res: $data');
-    //
-    //     List<dynamic> dataBody = data!.toList();
-    //
-    //     List<IssueItemModel> issuesList = dataBody.map((dynamic data) => IssueItemModel.fromJson(data)).toList();
-    //     log('issues_list_repo_res2: ${issuesList.length}');
-    //
-    //     return issuesList;
-    //   }
-    //   else{
-    //     throw Exception('Error in Issues List Repo');
-    //   }
-    // }catch(e){
-    //   log(e.toString());
-    //   throw Exception('$e:${response.statusCode}');
-    // }
 
    try{
      dynamic response = await apiService.getGetApiResponse(AppUrl.baseUrl);

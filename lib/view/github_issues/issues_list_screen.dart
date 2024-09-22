@@ -20,6 +20,16 @@ class _IssuesListScreenState extends State<IssuesListScreen> {
   List<IssueItemModel>? issuesWithoutFlutter;
 
 
+  void filterIssues(String query) {
+    if (issuesWithoutFlutter != null) {
+      setState(() {
+        log('inside_text_field: $issuesWithoutFlutter');
+        filteredIssues = issuesWithoutFlutter!.where((issue) => issue.title!.toLowerCase().contains(query.toLowerCase())).toList();
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -28,27 +38,18 @@ class _IssuesListScreenState extends State<IssuesListScreen> {
     return Scaffold(
       backgroundColor: const Color(0xff333333),
 
-      // body: SafeArea(
-      //   child: Center(
-      //     child: ElevatedButton(
-      //       onPressed: (){
-      //         _issuesListRepo.fetchGithubIssues();
-      //       },
-      //       child: Text('Fetch Data'),
-      //     ),
-      //   ),
-      // ),
 
       body: SafeArea(
         child: Column(
           children:[
             _buildPageTitle(size, textFont),
+
             // text_field
             Padding(
-            padding:  EdgeInsets.symmetric(
-              vertical: size.height * 0.008,
-              // vertical: ,
-            ),
+              padding:  EdgeInsets.symmetric(
+                vertical: size.height * 0.008,
+                // vertical: ,
+              ),
             child: TextField(
               style: TextStyle(
                 color: Colors.white,
@@ -67,18 +68,7 @@ class _IssuesListScreenState extends State<IssuesListScreen> {
                     )
                 ),
               ),
-              onChanged: (query) {
-                if(issuesWithoutFlutter != null){
-                  // log('inside_text_field: $issuesWithoutFlutter');
-                  setState(() {
-                    log('inside_text_field: $issuesWithoutFlutter');
-                    filteredIssues = issuesWithoutFlutter!.where((issue) => issue.title!.toLowerCase().contains(query.toLowerCase())).toList();
-                    });
-                  }
-                // else{
-                //     return;
-                //   }
-                }
+              onChanged: filterIssues,
             ),
           ),
 
