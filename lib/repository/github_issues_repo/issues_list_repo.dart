@@ -12,7 +12,7 @@ class IssuesListRepo {
     try{
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
-        log('issues_list_repo_res: ${data}');
+        log('issues_list_repo_res: $data');
 
         List<dynamic> dataBody = data!.toList();
 

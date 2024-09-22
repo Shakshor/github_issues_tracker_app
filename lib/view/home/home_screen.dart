@@ -14,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   // pages
-  final List<Widget> pages = const [
+  final List<Widget> pages =  const [
     IssuesListScreen(),
     UserProfileScreen(),
   ];
