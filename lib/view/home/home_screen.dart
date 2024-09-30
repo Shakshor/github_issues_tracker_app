@@ -3,6 +3,8 @@ import 'package:github_issue_tracker_app/view/github_issues/issues_list_screen.d
 import 'package:github_issue_tracker_app/view/github_issues/issues_list_test_screen.dart';
 import 'package:github_issue_tracker_app/view/profile/user_profile_screen.dart';
 
+import '../github_issues/issues_list_screen_with_state_management.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -16,7 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // pages
   final List<Widget> pages =  const [
-    IssuesListScreen(),
+    // IssuesListScreen(),
+    IssuesListWithStateManagementScreen(),
     UserProfileScreen(),
   ];
 
