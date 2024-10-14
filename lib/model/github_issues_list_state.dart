@@ -1,11 +1,12 @@
 import 'github_issuse_item_model/issue_item_model.dart';
 
 class GithubIssuesState{
- final List<IssueItemModel> issuesList;
 
- GithubIssuesState({
-       required this.issuesList
-     });
+  final List<IssueItemModel> issuesList;
+
+  GithubIssuesState({
+    required this.issuesList
+  });
 
   GithubIssuesState.initial({
     this.issuesList = const [],
@@ -15,7 +16,7 @@ class GithubIssuesState{
     List<IssueItemModel>? issuesList,
   }){
     return GithubIssuesState(
-        issuesList: issuesList ?? this.issuesList,
+      issuesList: issuesList ?? this.issuesList,
     );
   }
 }

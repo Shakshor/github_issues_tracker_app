@@ -88,111 +88,314 @@ class _IssuesListWithStateManagementScreenState
                   ),
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                    width: size.width * 0.002,
-                    color: Colors.white,
-                  )),
+                        width: size.width * 0.002,
+                        color: Colors.white,
+                      )),
                 ),
                 onChanged: filterIssues,
               ),
             ),
 
-            issuesList.isEmpty
-                ? Center(
-                    child: Text('Empty Issues List', style: TextStyle(color: Colors.white),),
-                  )
-                : Expanded(
-                    child: ListView.builder(
-                        itemCount: issuesList.length,
-                        itemBuilder: (context, index) {
-                          final issueItemData = issuesList[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (builder) =>
-                                          IssueItemDetailsScreen(
-                                            selectedIssue: issueItemData,
-                                          )));
-                            },
-                            child: Card(
-                              margin: EdgeInsets.zero,
-                              surfaceTintColor: const Color(0xff333333),
-                              elevation: 0,
-                              color: const Color(0xff333333),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: size.height * 0.012,
-                                  horizontal: size.width * 0.028,
-                                ),
-                                child: Column(
-                                  children: [
-                                    // issue_title&time
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            issueItemData.title.toString(),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: textFont.scale(17),
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          issueItemData.createdAt.toString(),
-                                          style: TextStyle(
-                                            fontSize: textFont.scale(12),
-                                            color: const Color(0xffB8B8B8),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // image&name_id
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        CircleAvatar(
-                                          // radius: 24,
-                                          radius: size.width * 0.06,
-                                          backgroundImage: NetworkImage(
-                                              issueItemData.user!.avatarUrl!
-                                                  .toString()),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            left: size.width * 0.02,
-                                          ),
-                                          child: Text(
-                                            issueItemData.nodeId.toString(),
-                                            style: TextStyle(
-                                              fontSize: textFont.scale(12),
-                                              color: const Color(0xff9B9B9B),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+            // switch (issuesList) {
+            //   AsyncData(:final value) => Expanded(
+            //     child: ListView.builder(
+            //       itemCount: value.length,
+            //       itemBuilder: (context, index) {
+            //         final issueItemData = value[index];
+            //         return GestureDetector(
+            //           onTap: (){
+            //             Navigator.push(
+            //                 context,
+            //                 MaterialPageRoute(
+            //                     builder: (builder) => IssueItemDetailsScreen(selectedIssue: issueItemData,)
+            //                 ));
+            //           },
+            //           child: Card(
+            //             margin: EdgeInsets.zero,
+            //             surfaceTintColor: const Color(0xff333333),
+            //             elevation: 0,
+            //             color: const Color(0xff333333),
+            //             child:Padding(
+            //               padding: EdgeInsets.symmetric(
+            //                 vertical: size.height * 0.012,
+            //                 horizontal: size.width * 0.028,
+            //               ),
+            //               child: Column(
+            //                 children:[
+            //                   // issue_title&time
+            //                   Row(
+            //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                     children:[
+            //                       Expanded(
+            //                         child: Text(
+            //                           issueItemData.title.toString(),
+            //                           overflow: TextOverflow.ellipsis,
+            //                           maxLines: 1,
+            //                           style: TextStyle(
+            //                             color: Colors.white,
+            //                             fontSize: textFont.scale(17),
+            //                           ),
+            //                         ),
+            //                       ),
+            //                       Text(
+            //                         issueItemData.createdAt.toString(),
+            //                         style: TextStyle(
+            //                           fontSize: textFont.scale(12),
+            //                           color: const Color(0xffB8B8B8),
+            //                         ),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                   // image&name_id
+            //                   Row(
+            //                     mainAxisAlignment: MainAxisAlignment.start,
+            //                     crossAxisAlignment: CrossAxisAlignment.center,
+            //                     children:[
+            //                       CircleAvatar(
+            //                         // radius: 24,
+            //                         radius: size.width * 0.06,
+            //                         backgroundImage: NetworkImage(issueItemData.user!.avatarUrl!.toString()),
+            //                       ),
+            //
+            //                       Padding(
+            //                         padding: EdgeInsets.only(
+            //                           left: size.width * 0.02,
+            //                         ),
+            //                         child: Text(
+            //                           issueItemData.nodeId.toString(),
+            //                           style: TextStyle(
+            //                             fontSize: textFont.scale(12),
+            //                             color: const Color(0xff9B9B9B),
+            //                           ),
+            //                         ),
+            //                       ),
+            //                     ],
+            //                   ),
+            //
+            //                   const Divider(
+            //                     thickness: 1,
+            //                     color: Colors.grey,
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //     ),
+            //   ),
+            //   AsyncError(:final error) => Center(
+            //     child: Text(
+            //         'Error: $error',
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontSize: textFont.scale(17),
+            //       ),
+            //     ),
+            //   ),
+            //   _ => const Center(child: CircularProgressIndicator()),
+            // },
 
-                                    const Divider(
-                                      thickness: 1,
-                                      color: Colors.grey,
+            issuesList.when(
+              data: (issues) => Expanded(
+                child: ListView.builder(
+                  itemCount: issues.length,
+                  itemBuilder: (context, index) {
+                    final issueItemData = issues[index];
+                    return GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => IssueItemDetailsScreen(selectedIssue: issueItemData,)
+                            ));
+                      },
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        surfaceTintColor: const Color(0xff333333),
+                        elevation: 0,
+                        color: const Color(0xff333333),
+                        child:Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: size.height * 0.012,
+                            horizontal: size.width * 0.028,
+                          ),
+                          child: Column(
+                            children:[
+                              // issue_title&time
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children:[
+                                  Expanded(
+                                    child: Text(
+                                      issueItemData.title.toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: textFont.scale(17),
+                                      ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Text(
+                                    issueItemData.createdAt.toString(),
+                                    style: TextStyle(
+                                      fontSize: textFont.scale(12),
+                                      color: const Color(0xffB8B8B8),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          );
-                        }),
-                  ),
+                              // image&name_id
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children:[
+                                  CircleAvatar(
+                                    // radius: 24,
+                                    radius: size.width * 0.06,
+                                    backgroundImage: NetworkImage(issueItemData.user!.avatarUrl!.toString()),
+                                  ),
 
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: size.width * 0.02,
+                                    ),
+                                    child: Text(
+                                      issueItemData.nodeId.toString(),
+                                      style: TextStyle(
+                                        fontSize: textFont.scale(12),
+                                        color: const Color(0xff9B9B9B),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const Divider(
+                                thickness: 1,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack)  {
+                log('inside_state_management_screen: $error');
+                return Center(
+                    child: Text(
+                      'Error: $error',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: textFont.scale(17),
+                      ),
+                    )
+                );
+              },
+            )
+
+           /* issuesList.isEmpty
+                ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+                : Expanded(
+                  child: ListView.builder(
+                  itemCount: issuesList.length,
+                  itemBuilder: (context, index) {
+                    final issueItemData = issuesList[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) =>
+                                    IssueItemDetailsScreen(
+                                      selectedIssue: issueItemData,
+                                    )));
+                      },
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        surfaceTintColor: const Color(0xff333333),
+                        elevation: 0,
+                        color: const Color(0xff333333),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: size.height * 0.012,
+                            horizontal: size.width * 0.028,
+                          ),
+                          child: Column(
+                            children: [
+                              // issue_title&time
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      issueItemData.title.toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: textFont.scale(17),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    issueItemData.createdAt.toString(),
+                                    style: TextStyle(
+                                      fontSize: textFont.scale(12),
+                                      color: const Color(0xffB8B8B8),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // image&name_id
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    // radius: 24,
+                                    radius: size.width * 0.06,
+                                    backgroundImage: NetworkImage(
+                                        issueItemData.user!.avatarUrl!
+                                            .toString()),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: size.width * 0.02,
+                                    ),
+                                    child: Text(
+                                      issueItemData.nodeId.toString(),
+                                      style: TextStyle(
+                                        fontSize: textFont.scale(12),
+                                        color: const Color(0xff9B9B9B),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const Divider(
+                                thickness: 1,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+*/
             /*// showing_list_data
             Expanded(
               child: FutureBuilder<List<IssueItemModel>>(
